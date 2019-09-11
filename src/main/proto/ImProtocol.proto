@@ -1,0 +1,96 @@
+syntax = "proto3";
+package src.main.proto;
+
+option java_package = "org.zhongweixian.live.protocol"; //设置java对应的package
+option java_multiple_files = true; //建议设置为true，这样会每个对象放在一个文件中，否则所有对象都在一个java文件中
+option java_generic_services = true;
+
+/**
+ * 设备类型
+ */
+enum DeviceType {
+    DEVICE_TYPE_H5 = 0; //H5
+    DEVICE_TYPE_PC = 1; //PC
+    DEVICE_TYPE_ANDROID = 2; //安卓
+    DEVICE_TYPE_IOS = 3; //IOS
+}
+
+
+enum Command {
+    CMD_LOGIN = 0;
+    CMD_LOGIN_RESP = 1; //登录响应
+    CMD_PING = 2; //握手请求，含http的websocket握手请求
+    CMD_AUTH = 3; //鉴权请求
+    CMD_SEND_SUCCESS = 4; // 发送响应成功消息
+    CMD_JOIN_GROUP = 5; //申请进入群组
+    CMD_JOIN_GROUP_MANAGER = 6; //申请入群管理
+    CMD_JOIN_GROUP_NOTIFY = 7; //进入群组通知
+    CMD_EXIT_GROUP_NOTIFY = 8; //退出群组通知
+
+    CMD_GROUP_CHAT = 9; //群聊
+    CMD_GROUP_CHAT_SECURITY = 10; //群聊
+    CMD_CHAT = 11; //单聊
+    CMD_CHAT_SECURITY = 12; //单聊
+
+    CMD_TALK_LIST_CLOSE = 13; //删除回话列表
+    CMD_CANCEL_MSG = 14; //发出撤消消息指令(管理员可以撤消所有人的消息，自己可以撤消自己的消息)
+    CMD_CANCEL_MSG_RESP = 15; //收到撤消消息指令
+    CMD_GET_USER_INFO = 16; //获取用户信息;
+    CMD_GET_USER_INFO_RESP = 17; //获取用户信息响应;
+
+    CMD_TALK_LIST = 200; //获取会话列表
+    CMD_TALK_LIST_RESP = 201; //响应会话列表
+
+    CMD_USER_INFO = 202; //获取好友信息
+    CMD_USER_INFO_RESP = 203; //好友信息响应
+    CMD_GROUP_INFO = 204; //获取群组信息
+    CMD_GROUP_INFO_RESP = 205; //群组信息响应
+
+
+}
+
+/**
+ * 加入群组申请的结果
+ */
+enum JoinGroupResult {
+    JOIN_GROUP_RESULT_UNKNOW = 0; //不允许进入，原因为其它
+    JOIN_GROUP_RESULT_OK = 1; //允许进入
+    JOIN_GROUP_RESULT_NOT_EXIST = 2; //组不存在
+    JOIN_GROUP_RESULT_GROUP_FULL = 3; //组满
+    JOIN_GROUP_RESULT_IN_BACKLIST = 4; //在黑名单中
+    JOIN_GROUP_RESULT_TAKEOUTED = 5; //被踢
+}
+
+/**
+ * 聊天类型
+ */
+enum ChatType {
+    CHAT_TYPE_PUBLIC = 0; //普通单聊，支持是否阅读
+    CHAT_TYPE_PRIVATE = 1; //私密单聊，读后即毁
+    CHAT_TYPE_GROUP = 2; //普通群聊  (显示阅读数，可以结合http协议来做)
+    CHAT_TYPE_GROUP_PRIVATE = 3; //私密群聊，读后即毁
+    CHAT_SYSTEM = 4; //系统消息
+}
+
+/**
+ * 消息类型
+ */
+enum MsgType {
+    MSG_TYPE_TEXT = 0; //文本
+    MSG_TYPE_IMG = 1; //图片
+    MSG_TYPE_VOICE = 2; //语音
+    MSG_TYPE_VIDEO = 3; //视频
+    MSG_TYPE_MUSIC = 4; //音乐
+    MSG_TYPE_NEWS = 5; //图文连接
+    MSG_TYPE_PERSION = 6; //加好友申请
+    MSG_TYPE_JOIN_GROUP = 7; //入群申请
+}
+
+
+message LoginMessage {
+    Command cmd = 1;
+    string username = 2;
+    string password = 3;
+    DeviceType deviceType = 4;
+    int64 cts = 5;
+}
